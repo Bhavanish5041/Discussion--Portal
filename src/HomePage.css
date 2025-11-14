@@ -1,0 +1,197 @@
+.home-container {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(20px);
+  font-family: Arial, sans-serif;
+  position: relative;
+  color: white;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+.home-heading {
+  text-align: center;
+  color: white;
+  margin-bottom: 20px;
+  font-weight: 600;
+}
+
+.filter-row {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  gap: 10px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  outline: none;
+}
+
+.search-input::placeholder {
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.dropdown {
+  padding: 12px 14px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 14px;
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+  outline: none;
+  cursor: pointer;
+}
+
+.dropdown option {
+  background: #1a1a1a;
+  color: white;
+}
+
+.scroll-container {
+  max-height: 500px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+/* Custom scrollbar styling */
+.scroll-container::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scroll-container::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.scroll-container::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.question-card {
+  display: flex;
+  align-items: flex-start;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  padding: 12px;
+  margin-bottom: 15px;
+  backdrop-filter: blur(10px);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.question-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.vote-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-right: 15px;
+}
+
+.vote-button {
+  border: none;
+  background: none;
+  font-size: 18px;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.6);
+  transition: color 0.2s ease;
+}
+
+.vote-button:hover {
+  color: rgba(255, 255, 255, 0.9);
+}
+
+.active-up {
+  color: #60a5fa !important;
+}
+
+.active-down {
+  color: #f87171 !important;
+}
+
+.vote-count {
+  font-weight: bold;
+  margin: 5px 0;
+  color: white;
+}
+
+.question-info {
+  flex: 1;
+  cursor: pointer;
+}
+
+.question-title {
+  color: white;
+  margin: 0 0 5px 0;
+  font-weight: 500;
+}
+
+.question-preview {
+  color: rgba(255, 255, 255, 0.7);
+  margin: 0;
+  font-size: 14px;
+}
+
+.category-tag {
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
+  border-radius: 5px;
+  padding: 2px 6px;
+  font-size: 12px;
+  margin-top: 5px;
+  display: inline-block;
+}
+
+.no-results {
+  text-align: center;
+  color: rgba(255, 255, 255, 0.6);
+}
+
+.add-button {
+  position: fixed;
+  bottom: 30px;
+  left: 40px;
+  padding: 14px 32px;
+  border-radius: 9999px;
+  background: white;
+  color: black;
+  border: none;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+  letter-spacing: 0.5px;
+  z-index: 1000;
+}
+
+.add-button:hover {
+  transform: translateY(-2px) scale(1.05);
+  background: #f0f0f0;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+}
+
+.add-button:active {
+  transform: translateY(0) scale(0.98);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
