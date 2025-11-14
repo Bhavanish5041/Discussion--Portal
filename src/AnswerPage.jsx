@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import './AnswerPage.css';
 
@@ -116,7 +117,7 @@ export default function AnswerPage({ question, goHome, handleQuestionVote, handl
         <div className="answers-list">
           {question.answers && question.answers.length > 0 ? (
             [...question.answers]
-              .sort((a, b) => b.votes - a.votes)
+              .sort((a, b) => b.votes - a.votes) // Sort by votes (highest first)
               .map((answer) => (
                 <div key={answer.id} className="answer-card">
                   <div className="vote-column">

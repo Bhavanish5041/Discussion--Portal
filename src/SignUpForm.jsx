@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './SignUpForm.css';
+import api from './api/axios';
 
 const SignupForm = ({ onSwitch, onSignupSuccess }) => {
   const [formData, setFormData] = useState({
@@ -25,19 +26,8 @@ const SignupForm = ({ onSwitch, onSignupSuccess }) => {
     setLoading(true);
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/signup', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Signup failed');
-      }
+      const response = await api.post('/auth/signup', formData);
+      const data = response.data;
 
       // Store token in localStorage
       localStorage.setItem('token', data.token);

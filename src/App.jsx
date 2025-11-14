@@ -5,8 +5,7 @@ import LoginForm from './LoginForm';
 import HomePage from './HomePage';
 import NewQuestion from './NewQuestion';
 import AnswerPage from './AnswerPage';
-
-const API_BASE_URL = import.meta.env?.VITE_API_BASE_URL ?? 'http://localhost:5000/api';
+import api from './api/axios';
 
 function App() {
   const [showLogin, setShowLogin] = useState(false);
@@ -35,21 +34,8 @@ function App() {
     try {
       setQuestionsLoading(true);
       setQuestionsError('');
-      const response = await fetch(`${API_BASE_URL}/questions`);
-      
-      // Check if response is JSON
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.error('Non-JSON response:', text);
-        throw new Error('Server returned an invalid response. Please check if the server is running on port 5000.');
-      }
-      
-      if (!response.ok) {
-        throw new Error('Failed to load questions.');
-      }
-      const data = await response.json();
-      setQuestions(data.map(normalizeQuestion));
+      const response = await api.get('/questions');
+      setQuestions(response.data.map(normalizeQuestion));
     } catch (error) {
       console.error('Error fetching questions:', error);
       setQuestionsError(error.message || 'Unable to load questions. Make sure the server is running.');
@@ -125,28 +111,8 @@ function App() {
 
     // Save to backend
     try {
-      const response = await fetch(`${API_BASE_URL}/questions/${questionId}/vote`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ vote: newVote }),
-      });
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.error('Non-JSON response from vote endpoint:', text);
-        throw new Error('Server returned an invalid response. Please restart the server.');
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Failed to save vote' }));
-        throw new Error(errorData.message || 'Failed to save vote');
-      }
-
-      const data = await response.json();
-      const normalized = normalizeQuestion(data);
+      const response = await api.patch(`/questions/${questionId}/vote`, { vote: newVote });
+      const normalized = normalizeQuestion(response.data);
 
       // Update with server response
       setQuestions((prevQuestions) => prevQuestions.map((q) => {
@@ -219,28 +185,8 @@ function App() {
 
     // Save to backend
     try {
-      const response = await fetch(`${API_BASE_URL}/questions/${questionId}/answers/${answerId}/vote`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ vote: newVote }),
-      });
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.error('Non-JSON response from answer vote endpoint:', text);
-        throw new Error('Server returned an invalid response. Please restart the server.');
-      }
-
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ message: 'Failed to save vote' }));
-        throw new Error(errorData.message || 'Failed to save vote');
-      }
-
-      const data = await response.json();
-      const normalized = normalizeQuestion(data);
+      const response = await api.patch(`/questions/${questionId}/answers/${answerId}/vote`, { vote: newVote });
+      const normalized = normalizeQuestion(response.data);
 
       // Update with server response
       setQuestions((prevQuestions) => prevQuestions.map((q) => {
@@ -272,24 +218,8 @@ function App() {
   const openQuestion = async (question) => {
     try {
       setQuestionsError('');
-      const response = await fetch(`${API_BASE_URL}/questions/${question.id}`);
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.error('Non-JSON response:', text);
-        const fallback = questions.find((q) => q.id === question.id);
-        if (fallback) {
-          setSelectedQuestion(fallback);
-          return;
-        }
-        throw new Error('Server returned an invalid response.');
-      }
-      
-      if (!response.ok) {
-        throw new Error('Failed to load question details.');
-      }
-      const data = await response.json();
-      setSelectedQuestion(normalizeQuestion(data));
+      const response = await api.get(`/questions/${question.id}`);
+      setSelectedQuestion(normalizeQuestion(response.data));
     } catch (error) {
       console.error('Error loading question:', error);
       setQuestionsError(error.message || 'Unable to load question details.');
@@ -307,28 +237,8 @@ function App() {
 
   const addQuestion = async ({ title, content, category }) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/questions`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ title, content, category }),
-      });
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.error('Non-JSON response:', text);
-        throw new Error('Server returned an invalid response. Please check if the server is running.');
-      }
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to create question.');
-      }
-
-      const normalized = normalizeQuestion(data);
+      const response = await api.post('/questions', { title, content, category });
+      const normalized = normalizeQuestion(response.data);
       setQuestions((prevQuestions) => [normalized, ...prevQuestions]);
       setShowNewQuestion(false);
       setSelectedQuestion(null);
@@ -342,28 +252,8 @@ function App() {
 
   const addAnswer = async (questionId, content) => {
     try {
-      const response = await fetch(`${API_BASE_URL}/questions/${questionId}/answers`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ content }),
-      });
-
-      const contentType = response.headers.get('content-type');
-      if (!contentType || !contentType.includes('application/json')) {
-        const text = await response.text();
-        console.error('Non-JSON response:', text);
-        throw new Error('Server returned an invalid response. Please check if the server is running.');
-      }
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message || 'Failed to submit answer.');
-      }
-
-      const normalized = normalizeQuestion(data);
+      const response = await api.post(`/questions/${questionId}/answers`, { content });
+      const normalized = normalizeQuestion(response.data);
 
       setQuestions((prevQuestions) =>
         prevQuestions.map((q) => (q.id === normalized.id ? normalized : q))
